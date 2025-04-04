@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Market Trend Analysis</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Analyze market trends and get AI-powered insights for better investment decisions.
+                </p>
+                <form method="post" action="/trends">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="market" class="form-label">Market</label>
+                                <select class="form-select" id="market" name="market" required>
+                                    <option value="US">US (NYSE, NASDAQ)</option>
+                                    <option value="BR">Brazil (B3)</option>
+                                </select>
+                                <div class="form-text">Select the market for trend analysis</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Asset Type</label>
+                                <select class="form-select" id="type" name="type" required>
+                                    <option value="stocks">Stocks</option>
+                                    <option value="etfs">ETFs</option>
+                                    <option value="bonds">Bonds</option>
+                                    <option value="fiis">Real Estate Funds (FIIs - BR only)</option>
+                                </select>
+                                <div class="form-text">Type of assets to analyze</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="period" class="form-label">Time Period</label>
+                                <select class="form-select" id="period" name="period" required>
+                                    <option value="1m">1 Month</option>
+                                    <option value="3m">3 Months</option>
+                                    <option value="6m">6 Months</option>
+                                    <option value="1y" selected>1 Year</option>
+                                    <option value="2y">2 Years</option>
+                                    <option value="5y">5 Years</option>
+                                </select>
+                                <div class="form-text">Historical data period to analyze</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Analyze Trends</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">How It Works</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">📊</div>
+                        <h5>1. Data Collection</h5>
+                        <p>We gather historical market data from reliable sources for the selected market and asset type.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">🧮</div>
+                        <h5>2. Statistical Analysis</h5>
+                        <p>Advanced statistical models (ARIMA, LSTM) analyze patterns and forecast future trends.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">🤖</div>
+                        <h5>3. AI Insights</h5>
+                        <p>Ollama (llama3.2 model) provides human-readable insights based on the analysis.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">US Market Overview</h4>
+            </div>
+            <div class="card-body">
+                <div class="terminal">
+                    <p>$ finbot analyze-trends --market US --period 1m</p>
+                    <p>CODEX: US Market Snapshot</p>
+                    <p>S&P 500: Uptrend (30-day change: +2.8%)</p>
+                    <p>NASDAQ: Strong uptrend (30-day change: +3.5%)</p>
+                    <p>Dow Jones: Neutral (30-day change: +0.9%)</p>
+                    <p>CODEX: Sector Performance</p>
+                    <p>Technology: Leading (+4.2%)</p>
+                    <p>Healthcare: Strong (+3.1%)</p>
+                    <p>Financials: Neutral (+1.2%)</p>
+                    <p>Energy: Lagging (-1.5%)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Brazilian Market Overview</h4>
+            </div>
+            <div class="card-body">
+                <div class="terminal">
+                    <p>$ finbot analyze-trends --market BR --period 1m</p>
+                    <p>CODEX: Brazilian Market Snapshot</p>
+                    <p>Ibovespa: Neutral (30-day change: +0.5%)</p>
+                    <p>IFIX (Real Estate Funds): Uptrend (30-day change: +2.1%)</p>
+                    <p>IDIV (Dividend Index): Uptrend (30-day change: +1.8%)</p>
+                    <p>CODEX: Sector Performance</p>
+                    <p>Commodities: Strong (+3.3%)</p>
+                    <p>Financials: Neutral (+0.7%)</p>
+                    <p>Retail: Lagging (-1.2%)</p>
+                    <p>Utilities: Uptrend (+2.5%)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

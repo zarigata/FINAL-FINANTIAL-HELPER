@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Market Analysis Results: {{ symbol }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Price Chart</h5>
+                        <div id="price-chart" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Analysis Parameters</h5>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <td>{{ symbol }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Market</th>
+                                    <td>{{ market }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Time Period</th>
+                                    <td>{{ period }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Analysis Date</th>
+                                    <td>{{ now().strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Key Statistics</h5>
+                        {% if result and result.statistics %}
+                            <table class="table table-bordered">
+                                <tbody>
+                                    {% for key, value in result.statistics.items() %}
+                                    <tr>
+                                        <th>{{ key|replace('_', ' ')|capitalize }}</th>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Sample statistics for demo -->
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Current Price</th>
+                                        <td>$185.92</td>
+                                    </tr>
+                                    <tr>
+                                        <th>52-Week High</th>
+                                        <td>$198.23</td>
+                                    </tr>
+                                    <tr>
+                                        <th>52-Week Low</th>
+                                        <td>$124.17</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Average Volume</th>
+                                        <td>64.3M</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Market Cap</th>
+                                        <td>$2.87T</td>
+                                    </tr>
+                                    <tr>
+                                        <th>P/E Ratio</th>
+                                        <td>30.5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Technical Indicators</h5>
+                        {% if result and result.technical_indicators %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Indicator</th>
+                                        <th>Value</th>
+                                        <th>Signal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for indicator in result.technical_indicators %}
+                                    <tr>
+                                        <td>{{ indicator.name }}</td>
+                                        <td>{{ indicator.value }}</td>
+                                        <td>
+                                            {% if indicator.signal == 'buy' %}
+                                            <span class="badge bg-success">Buy</span>
+                                            {% elif indicator.signal == 'sell' %}
+                                            <span class="badge bg-danger">Sell</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">Neutral</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Sample technical indicators for demo -->
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Indicator</th>
+                                        <th>Value</th>
+                                        <th>Signal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Moving Average (50-day)</td>
+                                        <td>178.45</td>
+                                        <td><span class="badge bg-success">Buy</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Moving Average (200-day)</td>
+                                        <td>165.32</td>
+                                        <td><span class="badge bg-success">Buy</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Relative Strength Index (RSI)</td>
+                                        <td>62.8</td>
+                                        <td><span class="badge bg-secondary">Neutral</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MACD</td>
+                                        <td>2.45</td>
+                                        <td><span class="badge bg-success">Buy</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bollinger Bands</td>
+                                        <td>Upper: 195.67, Lower: 161.23</td>
+                                        <td><span class="badge bg-secondary">Neutral</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>AI Analysis</h5>
+                        <div class="terminal">
+                            {% if result and result.ai_analysis %}
+                                {{ result.ai_analysis|replace('\n', '<br>')|safe }}
+                            {% else %}
+                                <p>$ finbot analyze --symbol {{ symbol }} --market {{ market }} --period {{ period }}</p>
+                                <p>Analyzing {{ symbol }} ({{ market }}) for period {{ period }}...</p>
+                                <p>CODEX: Technical Analysis</p>
+                                <p>Based on the current price action and technical indicators, {{ symbol }} is showing a bullish trend in the short term. The stock is trading above both its 50-day and 200-day moving averages, indicating strong momentum.</p>
+                                <p>CODEX: Fundamental Analysis</p>
+                                <p>The company has shown solid financial performance in recent quarters with revenue growth of 8.2% year-over-year. Earnings per share (EPS) have exceeded analyst expectations for the past 4 quarters.</p>
+                                <p>CODEX: Risk Assessment</p>
+                                <p>Volatility is moderate with a beta of 1.2. The stock has shown resilience during market downturns but remains sensitive to sector-specific news and broader market trends.</p>
+                                <p>CODEX: Recommendation</p>
+                                <p>Overall outlook: POSITIVE</p>
+                                <p>Suggested action: Consider accumulating on dips for long-term investment strategy.</p>
+                                <p>Target price range: $195-210 (12-month horizon)</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Related News</h5>
+                        {% if result and result.news %}
+                            <div class="list-group">
+                                {% for news_item in result.news %}
+                                <a href="{{ news_item.url }}" class="list-group-item list-group-item-action" target="_blank">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ news_item.title }}</h6>
+                                        <small>{{ news_item.date }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ news_item.summary }}</p>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Sample news for demo -->
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ symbol }} Reports Strong Quarterly Results</h6>
+                                        <small>3 days ago</small>
+                                    </div>
+                                    <p class="mb-1">The company reported earnings that exceeded analyst expectations, driven by strong product sales and expanding margins.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Analysts Raise Price Target for {{ symbol }}</h6>
+                                        <small>1 week ago</small>
+                                    </div>
+                                    <p class="mb-1">Several major investment banks have raised their price targets following positive earnings and guidance.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ symbol }} Announces New Product Line</h6>
+                                        <small>2 weeks ago</small>
+                                    </div>
+                                    <p class="mb-1">The company unveiled its latest product line, expected to drive growth in the coming quarters.</p>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="/analyze" class="btn btn-secondary me-md-2">New Analysis</a>
+                    <a href="/trends?market={{ market }}&type=stocks&period={{ period }}" class="btn btn-primary">Analyze Market Trends</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if chart_json %}
+        // Render price chart from JSON data
+        var priceChart = JSON.parse('{{ chart_json|safe }}');
+        Plotly.newPlot('price-chart', priceChart.data, priceChart.layout);
+        {% else %}
+        // Create a sample candlestick chart for demo
+        var trace = {
+            x: [{% for i in range(30) %}'2025-0{{ (4 - i // 30)|string }}-{{ (30 - i % 30)|string }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+            close: [{% for i in range(30) %}{{ 180 + (i % 10) - (i % 5) }}{% if not loop.last %}, {% endif %}{% endfor %}],
+            high: [{% for i in range(30) %}{{ 185 + (i % 10) - (i % 5) }}{% if not loop.last %}, {% endif %}{% endfor %}],
+            low: [{% for i in range(30) %}{{ 175 + (i % 10) - (i % 5) }}{% if not loop.last %}, {% endif %}{% endfor %}],
+            open: [{% for i in range(30) %}{{ 178 + (i % 10) - (i % 5) }}{% if not loop.last %}, {% endif %}{% endfor %}],
+            type: 'candlestick',
+            name: '{{ symbol }}',
+            increasing: {line: {color: '#26a69a'}},
+            decreasing: {line: {color: '#ef5350'}}
+        };
+
+        var data = [trace];
+
+        var layout = {
+            title: '{{ symbol }} Price History',
+            yaxis: {title: 'Price'},
+            xaxis: {
+                title: 'Date',
+                rangeslider: {visible: false}
+            },
+            height: 500,
+            margin: {l: 50, r: 20, b: 40, t: 50}
+        };
+
+        Plotly.newPlot('price-chart', data, layout);
+        {% endif %}
+    });
+</script>
+{% endblock %}
