@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Market Trend Analysis Results</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Trend Forecast</h5>
+                        <div id="trend-chart" class="chart-container"></div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Analysis Parameters</h5>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Market</th>
+                                    <td>{{ market }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Asset Type</th>
+                                    <td>{{ asset_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Time Period</th>
+                                    <td>{{ period }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Analysis Date</th>
+                                    <td>{{ now().strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Key Metrics</h5>
+                        {% if result and result.metrics %}
+                            <table class="table table-bordered">
+                                <tbody>
+                                    {% for key, value in result.metrics.items() %}
+                                    <tr>
+                                        <th>{{ key|replace('_', ' ')|capitalize }}</th>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Sample metrics for demo -->
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Overall Trend</th>
+                                        <td>
+                                            {% if market == 'US' %}
+                                                <span class="badge bg-success">Bullish</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">Neutral</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Volatility</th>
+                                        <td>
+                                            {% if market == 'US' %}
+                                                Moderate (15.2%)
+                                            {% else %}
+                                                High (22.7%)
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Momentum</th>
+                                        <td>
+                                            {% if market == 'US' %}
+                                                Strong (RSI: 68.5)
+                                            {% else %}
+                                                Weak (RSI: 48.3)
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>30-Day Forecast</th>
+                                        <td>
+                                            {% if market == 'US' %}
+                                                <span class="text-success">+3.2%</span>
+                                            {% else %}
+                                                <span class="text-warning">+0.8%</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>90-Day Forecast</th>
+                                        <td>
+                                            {% if market == 'US' %}
+                                                <span class="text-success">+7.5%</span>
+                                            {% else %}
+                                                <span class="text-success">+4.2%</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Sector Performance</h5>
+                        {% if result and result.sector_performance %}
+                            <div id="sector-chart" class="chart-container" style="height: 300px;"></div>
+                            <table class="table table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Sector</th>
+                                        <th>Performance</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sector in result.sector_performance %}
+                                    <tr>
+                                        <td>{{ sector.name }}</td>
+                                        <td>{{ sector.performance }}%</td>
+                                        <td>
+                                            {% if sector.trend == 'bullish' %}
+                                            <span class="badge bg-success">Bullish</span>
+                                            {% elif sector.trend == 'bearish' %}
+                                            <span class="badge bg-danger">Bearish</span>
+                                            {% else %}
+                                            <span class="badge bg-warning">Neutral</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Sample sector performance for demo -->
+                            <div id="sector-chart" class="chart-container" style="height: 300px;"></div>
+                            <table class="table table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Sector</th>
+                                        <th>Performance</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if market == 'US' %}
+                                        <tr>
+                                            <td>Technology</td>
+                                            <td>+4.2%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Healthcare</td>
+                                            <td>+3.1%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Financials</td>
+                                            <td>+1.2%</td>
+                                            <td><span class="badge bg-warning">Neutral</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Consumer Discretionary</td>
+                                            <td>+2.5%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Energy</td>
+                                            <td>-1.5%</td>
+                                            <td><span class="badge bg-danger">Bearish</span></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>Commodities</td>
+                                            <td>+3.3%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Financials</td>
+                                            <td>+0.7%</td>
+                                            <td><span class="badge bg-warning">Neutral</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Retail</td>
+                                            <td>-1.2%</td>
+                                            <td><span class="badge bg-danger">Bearish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Utilities</td>
+                                            <td>+2.5%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Real Estate</td>
+                                            <td>+2.1%</td>
+                                            <td><span class="badge bg-success">Bullish</span></td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>AI Insights</h5>
+                        <div class="terminal">
+                            {% if ai_insights %}
+                                {{ ai_insights|replace('\n', '<br>')|safe }}
+                            {% else %}
+                                <p>$ finbot analyze-trends --market {{ market }} --type {{ asset_type }} --period {{ period }}</p>
+                                <p>CODEX: Market Trend Analysis</p>
+                                {% if market == 'US' %}
+                                    <p>The US {{ asset_type }} market is showing a bullish trend with strong momentum in technology and healthcare sectors. Economic indicators suggest continued growth in the near term, supported by favorable monetary policy and strong corporate earnings.</p>
+                                    
+                                    <p>CODEX: Key Observations</p>
+                                    <p>1. Technology sector continues to lead with significant outperformance</p>
+                                    <p>2. Healthcare showing resilience amid market fluctuations</p>
+                                    <p>3. Energy sector facing headwinds due to commodity price pressures</p>
+                                    <p>4. Small-cap stocks beginning to show relative strength</p>
+                                    
+                                    <p>CODEX: Risk Factors</p>
+                                    <p>- Inflation concerns could impact growth projections</p>
+                                    <p>- Potential interest rate adjustments may affect market sentiment</p>
+                                    <p>- Geopolitical tensions remain a wild card</p>
+                                    
+                                    <p>CODEX: Forecast</p>
+                                    <p>Short-term (30 days): Bullish with potential volatility</p>
+                                    <p>Medium-term (90 days): Moderately bullish with sector rotation likely</p>
+                                    <p>Long-term (1 year): Positive outlook with expected 8-12% growth</p>
+                                {% else %}
+                                    <p>The Brazilian {{ asset_type }} market is showing a neutral to slightly bullish trend with strength in commodities and utilities sectors. The market is navigating economic challenges while showing resilience in specific segments.</p>
+                                    
+                                    <p>CODEX: Key Observations</p>
+                                    <p>1. Commodity-related stocks outperforming due to global demand</p>
+                                    <p>2. Utilities showing defensive strength amid economic uncertainty</p>
+                                    <p>3. Retail sector struggling with consumer spending pressures</p>
+                                    <p>4. Financial stocks showing mixed performance with potential upside</p>
+                                    
+                                    <p>CODEX: Risk Factors</p>
+                                    <p>- Currency fluctuations impacting corporate earnings</p>
+                                    <p>- Political uncertainty affecting investor confidence</p>
+                                    <p>- Inflation pressures on consumer-oriented sectors</p>
+                                    
+                                    <p>CODEX: Forecast</p>
+                                    <p>Short-term (30 days): Neutral with sector-specific opportunities</p>
+                                    <p>Medium-term (90 days): Moderately bullish as economic conditions improve</p>
+                                    <p>Long-term (1 year): Positive outlook with expected 5-9% growth</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="/trends" class="btn btn-secondary me-md-2">New Analysis</a>
+                    <a href="/news?market={{ market }}" class="btn btn-primary">View Related News</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if chart_json %}
+        // Render trend chart from JSON data
+        var trendChart = JSON.parse('{{ chart_json|safe }}');
+        Plotly.newPlot('trend-chart', trendChart.data, trendChart.layout);
+        {% else %}
+        // Create a sample trend chart for demo
+        var historicalData = [];
+        var forecastData = [];
+        
+        // Generate sample data based on market
+        {% if market == 'US' %}
+            var baseValue = 100;
+            var trend = 0.05;  // Positive trend
+            var volatility = 0.02;
+        {% else %}
+            var baseValue = 100;
+            var trend = 0.02;  // Slight positive trend
+            var volatility = 0.03;  // Higher volatility
+        {% endif %}
+        
+        // Generate historical data (past 60 days)
+        for (var i = 0; i < 60; i++) {
+            var dayEffect = Math.sin(i / 10) * volatility;
+            var randomEffect = (Math.random() - 0.5) * volatility * 2;
+            var trendEffect = trend * i / 60;
+            
+            historicalData.push(baseValue * (1 + trendEffect + dayEffect + randomEffect));
+        }
+        
+        // Generate forecast data (next 30 days)
+        var lastValue = historicalData[historicalData.length - 1];
+        for (var i = 0; i < 30; i++) {
+            var dayEffect = Math.sin((i + 60) / 10) * volatility;
+            var randomEffect = (Math.random() - 0.5) * volatility * 3; // More uncertainty in forecast
+            var trendEffect = trend * (i + 60) / 60;
+            
+            forecastData.push(baseValue * (1 + trendEffect + dayEffect + randomEffect));
+        }
+        
+        // Create x-axis dates
+        var dates = [];
+        var today = new Date();
+        
+        // Past dates
+        for (var i = 60; i > 0; i--) {
+            var date = new Date(today);
+            date.setDate(today.getDate() - i);
+            dates.push(date.toISOString().split('T')[0]);
+        }
+        
+        // Future dates
+        for (var i = 0; i < 30; i++) {
+            var date = new Date(today);
+            date.setDate(today.getDate() + i);
+            dates.push(date.toISOString().split('T')[0]);
+        }
+        
+        // Create the plot
+        var trace1 = {
+            x: dates.slice(0, 60),
+            y: historicalData,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Historical',
+            line: {
+                color: 'blue'
+            }
+        };
+        
+        var trace2 = {
+            x: dates.slice(59, 90),
+            y: [historicalData[historicalData.length - 1]].concat(forecastData),
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Forecast',
+            line: {
+                color: 'red',
+                dash: 'dash'
+            }
+        };
+        
+        var data = [trace1, trace2];
+        
+        var layout = {
+            title: '{{ market }} {{ asset_type|capitalize }} Market Trend Analysis',
+            xaxis: {
+                title: 'Date',
+                showgrid: false
+            },
+            yaxis: {
+                title: 'Index Value',
+                showgrid: true
+            },
+            legend: {
+                x: 0.1,
+                y: 1
+            },
+            height: 500,
+            margin: {l: 50, r: 20, b: 40, t: 50}
+        };
+        
+        Plotly.newPlot('trend-chart', data, layout);
+        
+        // Create sector performance chart
+        var sectorData = [{
+            type: 'bar',
+            x: [],
+            y: [],
+            marker: {
+                color: []
+            }
+        }];
+        
+        {% if market == 'US' %}
+            sectorData[0].x = ['Technology', 'Healthcare', 'Financials', 'Consumer', 'Energy'];
+            sectorData[0].y = [4.2, 3.1, 1.2, 2.5, -1.5];
+            sectorData[0].marker.color = ['#26a69a', '#26a69a', '#ffeb3b', '#26a69a', '#ef5350'];
+        {% else %}
+            sectorData[0].x = ['Commodities', 'Financials', 'Retail', 'Utilities', 'Real Estate'];
+            sectorData[0].y = [3.3, 0.7, -1.2, 2.5, 2.1];
+            sectorData[0].marker.color = ['#26a69a', '#ffeb3b', '#ef5350', '#26a69a', '#26a69a'];
+        {% endif %}
+        
+        var sectorLayout = {
+            title: 'Sector Performance (%)',
+            xaxis: {
+                title: 'Sector'
+            },
+            yaxis: {
+                title: 'Performance (%)'
+            },
+            height: 300,
+            margin: {l: 50, r: 20, b: 40, t: 50}
+        };
+        
+        Plotly.newPlot('sector-chart', sectorData, sectorLayout);
+        {% endif %}
+    });
+</script>
+{% endblock %}
