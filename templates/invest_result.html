@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Investment Plan Results</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Investment Parameters</h5>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Initial Investment</th>
+                                    <td>${{ amount }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Market</th>
+                                    <td>{{ market }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Investment Type</th>
+                                    <td>{{ investment_type }}</td>
+                                </tr>
+                                {% if goal %}
+                                <tr>
+                                    <th>Financial Goal</th>
+                                    <td>${{ goal }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <th>Timeline</th>
+                                    <td>{{ years }} years</td>
+                                </tr>
+                                <tr>
+                                    <th>Risk Tolerance</th>
+                                    <td>{{ risk_tolerance|capitalize }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Investment Summary</h5>
+                        {% if result %}
+                            <table class="table table-bordered">
+                                <tbody>
+                                    {% if result.expected_return %}
+                                    <tr>
+                                        <th>Expected Annual Return</th>
+                                        <td>{{ result.expected_return|round(2) }}%</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if result.risk_level %}
+                                    <tr>
+                                        <th>Risk Level</th>
+                                        <td>{{ result.risk_level }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if result.projected_final_value %}
+                                    <tr>
+                                        <th>Projected Final Value</th>
+                                        <td>${{ result.projected_final_value|round(2) }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if result.time_to_goal %}
+                                    <tr>
+                                        <th>Estimated Time to Goal</th>
+                                        <td>{{ result.time_to_goal }} years</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                No result data available. This is a simulation.
+                            </div>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>Expected Annual Return</th>
+                                        <td>8.5%</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Risk Level</th>
+                                        <td>{{ risk_tolerance|capitalize }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Projected Final Value</th>
+                                        <td>${{ (amount * (1.085 ** years))|round(2) }}</td>
+                                    </tr>
+                                    {% if goal %}
+                                    <tr>
+                                        <th>Estimated Time to Goal</th>
+                                        <td>{{ ((log(goal / amount) / log(1.085)))|round(1) }} years</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if chart_json %}
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Projected Growth</h5>
+                        <div id="growth-chart" class="chart-container"></div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Recommended Portfolio Allocation</h5>
+                        {% if result and result.portfolio_allocation %}
+                            <div id="allocation-chart" class="chart-container" style="height: 300px;"></div>
+                            <table class="table table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Allocation</th>
+                                        <th>Expected Return</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for asset in result.portfolio_allocation %}
+                                    <tr>
+                                        <td>{{ asset.name }}</td>
+                                        <td>{{ asset.allocation }}%</td>
+                                        <td>{{ asset.expected_return }}%</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Sample portfolio allocation for demo -->
+                            <div id="allocation-chart" class="chart-container" style="height: 300px;"></div>
+                            <table class="table table-striped mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Allocation</th>
+                                        <th>Expected Return</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if investment_type == 'stocks' %}
+                                        <tr>
+                                            <td>Large Cap Stocks</td>
+                                            <td>40%</td>
+                                            <td>8.5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mid Cap Stocks</td>
+                                            <td>30%</td>
+                                            <td>9.2%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Small Cap Stocks</td>
+                                            <td>20%</td>
+                                            <td>10.1%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>International Stocks</td>
+                                            <td>10%</td>
+                                            <td>7.8%</td>
+                                        </tr>
+                                    {% elif investment_type == 'bonds' %}
+                                        <tr>
+                                            <td>Government Bonds</td>
+                                            <td>50%</td>
+                                            <td>4.2%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Corporate Bonds</td>
+                                            <td>30%</td>
+                                            <td>5.5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Municipal Bonds</td>
+                                            <td>20%</td>
+                                            <td>3.8%</td>
+                                        </tr>
+                                    {% elif investment_type == 'etfs' %}
+                                        <tr>
+                                            <td>S&P 500 ETF</td>
+                                            <td>40%</td>
+                                            <td>8.0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Bond Market ETF</td>
+                                            <td>30%</td>
+                                            <td>4.5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>International ETF</td>
+                                            <td>20%</td>
+                                            <td>7.5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dividend ETF</td>
+                                            <td>10%</td>
+                                            <td>6.0%</td>
+                                        </tr>
+                                    {% elif investment_type == 'fiis' %}
+                                        <tr>
+                                            <td>Commercial Properties FII</td>
+                                            <td>40%</td>
+                                            <td>7.5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Residential Properties FII</td>
+                                            <td>30%</td>
+                                            <td>6.8%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Logistics FII</td>
+                                            <td>20%</td>
+                                            <td>8.2%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Paper FII</td>
+                                            <td>10%</td>
+                                            <td>5.5%</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>Savings Account</td>
+                                            <td>100%</td>
+                                            <td>3.0%</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>AI Insights</h5>
+                        <div class="terminal">
+                            {% if result and result.ai_insights %}
+                                {{ result.ai_insights|replace('\n', '<br>')|safe }}
+                            {% else %}
+                                <p>$ finbot analyze --market {{ market }} --type {{ investment_type }}</p>
+                                <p>Analyzing {{ market }} {{ investment_type }}...</p>
+                                <p>Based on current market conditions and your risk profile ({{ risk_tolerance }}), this investment plan has a favorable outlook.</p>
+                                {% if market == 'US' and investment_type == 'stocks' %}
+                                <p>US stocks have shown strong performance in the technology and healthcare sectors.</p>
+                                <p>Consider allocating more to these sectors for potentially higher returns.</p>
+                                {% elif market == 'BR' and investment_type == 'stocks' %}
+                                <p>Brazilian stocks have been volatile but show potential in commodities and financial sectors.</p>
+                                <p>The current economic policies may favor domestic growth in the coming years.</p>
+                                {% elif investment_type == 'bonds' %}
+                                <p>Bond yields are currently at moderate levels with potential for stability.</p>
+                                <p>Consider a ladder strategy to mitigate interest rate risk.</p>
+                                {% elif investment_type == 'fiis' %}
+                                <p>Brazilian Real Estate Funds (FIIs) offer attractive dividend yields.</p>
+                                <p>Logistics and commercial properties show strong fundamentals.</p>
+                                {% endif %}
+                                <p>Recommendation: Proceed with the investment plan and review quarterly.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="/invest" class="btn btn-secondary me-md-2">Modify Plan</a>
+                    <a href="/" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if chart_json %}
+        // Render growth chart
+        var growthChart = JSON.parse('{{ chart_json|safe }}');
+        Plotly.newPlot('growth-chart', growthChart.data, growthChart.layout);
+        {% endif %}
+
+        // Render allocation chart
+        var data = [{
+            type: 'pie',
+            labels: [],
+            values: [],
+            textinfo: 'label+percent',
+            insidetextorientation: 'radial'
+        }];
+
+        {% if result and result.portfolio_allocation %}
+            {% for asset in result.portfolio_allocation %}
+                data[0].labels.push('{{ asset.name }}');
+                data[0].values.push({{ asset.allocation }});
+            {% endfor %}
+        {% else %}
+            {% if investment_type == 'stocks' %}
+                data[0].labels = ['Large Cap Stocks', 'Mid Cap Stocks', 'Small Cap Stocks', 'International Stocks'];
+                data[0].values = [40, 30, 20, 10];
+            {% elif investment_type == 'bonds' %}
+                data[0].labels = ['Government Bonds', 'Corporate Bonds', 'Municipal Bonds'];
+                data[0].values = [50, 30, 20];
+            {% elif investment_type == 'etfs' %}
+                data[0].labels = ['S&P 500 ETF', 'Total Bond Market ETF', 'International ETF', 'Dividend ETF'];
+                data[0].values = [40, 30, 20, 10];
+            {% elif investment_type == 'fiis' %}
+                data[0].labels = ['Commercial Properties FII', 'Residential Properties FII', 'Logistics FII', 'Paper FII'];
+                data[0].values = [40, 30, 20, 10];
+            {% else %}
+                data[0].labels = ['Savings Account'];
+                data[0].values = [100];
+            {% endif %}
+        {% endif %}
+
+        var layout = {
+            height: 300,
+            margin: {l: 0, r: 0, b: 0, t: 0},
+            showlegend: true
+        };
+
+        Plotly.newPlot('allocation-chart', data, layout);
+    });
+</script>
+{% endblock %}

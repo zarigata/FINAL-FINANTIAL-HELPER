@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <span style="color: #20c20e;">Fin</span>Bot - AI Financial Helper
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Welcome to FinBot</h4>
+                        <p class="lead">
+                            Your AI-powered financial assistant for American and Brazilian markets.
+                        </p>
+                        <p>
+                            FinBot helps you make informed investment decisions by analyzing market data, 
+                            providing investment recommendations, and tracking your portfolio performance.
+                        </p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                            <a href="/invest" class="btn btn-primary me-md-2">Start Investing</a>
+                            <a href="/analyze" class="btn btn-outline-secondary">Analyze Markets</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="terminal">
+                            <p>$ finbot --version</p>
+                            <p>FinBot v1.0</p>
+                            <p>$ finbot --status</p>
+                            <p>✓ Ollama: Connected</p>
+                            <p>✓ Data: Ready</p>
+                            <p>✓ US Markets: Available</p>
+                            <p>✓ BR Markets: Available</p>
+                            <p>$ _</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h3 class="mb-4">Features</h3>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">📊</div>
+                <h5 class="card-title">Market Analysis</h5>
+                <p class="card-text">
+                    Analyze stocks, ETFs, bonds, and more from US and Brazilian markets.
+                </p>
+                <a href="/analyze" class="btn btn-sm btn-primary">Analyze Markets</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">💰</div>
+                <h5 class="card-title">Investment Planning</h5>
+                <p class="card-text">
+                    Get personalized investment recommendations based on your goals.
+                </p>
+                <a href="/invest" class="btn btn-sm btn-primary">Plan Investments</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">📈</div>
+                <h5 class="card-title">Trend Analysis</h5>
+                <p class="card-text">
+                    Identify market trends and get AI-powered insights for better decisions.
+                </p>
+                <a href="/trends" class="btn btn-sm btn-primary">Analyze Trends</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">📰</div>
+                <h5 class="card-title">Financial News</h5>
+                <p class="card-text">
+                    Stay updated with the latest financial news and market updates.
+                </p>
+                <a href="/news" class="btn btn-sm btn-primary">Read News</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">🔄</div>
+                <h5 class="card-title">Data Updates</h5>
+                <p class="card-text">
+                    Update market data for accurate analysis and recommendations.
+                </p>
+                <a href="/update-data" class="btn btn-sm btn-primary">Update Data</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card feature-card">
+            <div class="card-body text-center">
+                <div class="feature-icon">⚙️</div>
+                <h5 class="card-title">Configuration</h5>
+                <p class="card-text">
+                    Configure Ollama settings and API keys for optimal performance.
+                </p>
+                <a href="/setup" class="btn btn-sm btn-primary">Setup</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">System Status</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Components</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Alpha Vantage API
+                                {% if alpha_vantage_available %}
+                                <span class="badge bg-success rounded-pill">Available</span>
+                                {% else %}
+                                <span class="badge bg-warning rounded-pill">Not Available</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                B3 API
+                                {% if b3_api_available %}
+                                <span class="badge bg-success rounded-pill">Available</span>
+                                {% else %}
+                                <span class="badge bg-warning rounded-pill">Not Available</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Quick Actions</h5>
+                        <div class="d-grid gap-2">
+                            <a href="/api/test" class="btn btn-outline-primary">Test API Connection</a>
+                            <a href="/setup" class="btn btn-outline-secondary">Configure Settings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

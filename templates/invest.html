@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Investment Planning</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Plan your investments based on your financial goals and risk tolerance.
+                </p>
+                <form method="post" action="/invest">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Investment Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="amount" name="amount" value="1000" min="1" required>
+                                </div>
+                                <div class="form-text">Amount you want to invest</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="market" class="form-label">Market</label>
+                                <select class="form-select" id="market" name="market" required>
+                                    <option value="US">US (NYSE, NASDAQ)</option>
+                                    <option value="BR">Brazil (B3)</option>
+                                </select>
+                                <div class="form-text">Select the market for your investment</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Investment Type</label>
+                                <select class="form-select" id="type" name="type" required>
+                                    <option value="stocks">Stocks</option>
+                                    <option value="etfs">ETFs</option>
+                                    <option value="bonds">Bonds</option>
+                                    <option value="savings">Traditional Savings</option>
+                                    <option value="fiis">Real Estate Funds (FIIs - BR only)</option>
+                                </select>
+                                <div class="form-text">Type of investment</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="goal" class="form-label">Financial Goal (Optional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="goal" name="goal" min="0">
+                                </div>
+                                <div class="form-text">Target amount you want to reach</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="years" class="form-label">Investment Timeline (Years)</label>
+                                <input type="number" class="form-control" id="years" name="years" value="10" min="1" max="50" required>
+                                <div class="form-text">How long you plan to invest</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="risk_tolerance" class="form-label">Risk Tolerance</label>
+                                <select class="form-select" id="risk_tolerance" name="risk_tolerance" required>
+                                    <option value="conservative">Conservative</option>
+                                    <option value="moderate" selected>Moderate</option>
+                                    <option value="aggressive">Aggressive</option>
+                                </select>
+                                <div class="form-text">Your comfort level with investment risk</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Generate Investment Plan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">How It Works</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">📝</div>
+                        <h5>1. Enter Your Details</h5>
+                        <p>Provide your investment amount, timeline, and preferences.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">🧠</div>
+                        <h5>2. AI Analysis</h5>
+                        <p>Our AI analyzes market data and optimizes your portfolio.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="feature-icon">📊</div>
+                        <h5>3. Get Recommendations</h5>
+                        <p>Receive a detailed investment plan with projections.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

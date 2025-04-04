@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Market Analysis</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Analyze stocks, ETFs, bonds, and other financial instruments from US and Brazilian markets.
+                </p>
+                <form method="post" action="/analyze">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="symbol" class="form-label">Symbol</label>
+                                <input type="text" class="form-control" id="symbol" name="symbol" placeholder="e.g., AAPL, PETR4" required>
+                                <div class="form-text">Enter the ticker symbol to analyze</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="market" class="form-label">Market</label>
+                                <select class="form-select" id="market" name="market" required>
+                                    <option value="US">US (NYSE, NASDAQ)</option>
+                                    <option value="BR">Brazil (B3)</option>
+                                </select>
+                                <div class="form-text">Select the market for analysis</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="period" class="form-label">Time Period</label>
+                                <select class="form-select" id="period" name="period" required>
+                                    <option value="1m">1 Month</option>
+                                    <option value="3m">3 Months</option>
+                                    <option value="6m">6 Months</option>
+                                    <option value="1y" selected>1 Year</option>
+                                    <option value="2y">2 Years</option>
+                                    <option value="5y">5 Years</option>
+                                    <option value="10y">10 Years</option>
+                                    <option value="max">Maximum Available</option>
+                                </select>
+                                <div class="form-text">Historical data period to analyze</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Analyze</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Popular US Stocks</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="javascript:void(0)" onclick="fillSymbol('AAPL', 'US')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Apple Inc. (AAPL)
+                        <span class="badge bg-primary rounded-pill">Tech</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('MSFT', 'US')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Microsoft Corp. (MSFT)
+                        <span class="badge bg-primary rounded-pill">Tech</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('AMZN', 'US')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Amazon.com Inc. (AMZN)
+                        <span class="badge bg-success rounded-pill">Retail</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('GOOGL', 'US')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Alphabet Inc. (GOOGL)
+                        <span class="badge bg-primary rounded-pill">Tech</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('TSLA', 'US')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Tesla Inc. (TSLA)
+                        <span class="badge bg-danger rounded-pill">Auto</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Popular Brazilian Stocks</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="javascript:void(0)" onclick="fillSymbol('PETR4', 'BR')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Petrobras PN (PETR4)
+                        <span class="badge bg-warning rounded-pill">Energy</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('VALE3', 'BR')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Vale ON (VALE3)
+                        <span class="badge bg-secondary rounded-pill">Mining</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('ITUB4', 'BR')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Itaú Unibanco PN (ITUB4)
+                        <span class="badge bg-info rounded-pill">Finance</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('BBDC4', 'BR')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Bradesco PN (BBDC4)
+                        <span class="badge bg-info rounded-pill">Finance</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="fillSymbol('MGLU3', 'BR')" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        Magazine Luiza ON (MGLU3)
+                        <span class="badge bg-success rounded-pill">Retail</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Market Indices</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>US Indices</h5>
+                        <div class="list-group">
+                            <a href="javascript:void(0)" onclick="fillSymbol('^GSPC', 'US')" class="list-group-item list-group-item-action">
+                                S&P 500 (^GSPC)
+                            </a>
+                            <a href="javascript:void(0)" onclick="fillSymbol('^DJI', 'US')" class="list-group-item list-group-item-action">
+                                Dow Jones Industrial Average (^DJI)
+                            </a>
+                            <a href="javascript:void(0)" onclick="fillSymbol('^IXIC', 'US')" class="list-group-item list-group-item-action">
+                                NASDAQ Composite (^IXIC)
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Brazilian Indices</h5>
+                        <div class="list-group">
+                            <a href="javascript:void(0)" onclick="fillSymbol('^BVSP', 'BR')" class="list-group-item list-group-item-action">
+                                Ibovespa (^BVSP)
+                            </a>
+                            <a href="javascript:void(0)" onclick="fillSymbol('IFIX', 'BR')" class="list-group-item list-group-item-action">
+                                Índice de Fundos Imobiliários (IFIX)
+                            </a>
+                            <a href="javascript:void(0)" onclick="fillSymbol('IDIV', 'BR')" class="list-group-item list-group-item-action">
+                                Índice Dividendos (IDIV)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function fillSymbol(symbol, market) {
+        document.getElementById('symbol').value = symbol;
+        document.getElementById('market').value = market;
+    }
+</script>
+{% endblock %}
