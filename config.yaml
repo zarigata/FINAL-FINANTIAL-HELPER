@@ -1,0 +1,97 @@
+# ███████╗██╗███╗   ██╗██████╗  ██████╗ ████████╗
+# ██╔════╝██║████╗  ██║██╔══██╗██╔═══██╗╚══██╔══╝
+# █████╗  ██║██╔██╗ ██║██████╔╝██║   ██║   ██║   
+# ██╔══╝  ██║██║╚██╗██║██╔══██╗██║   ██║   ██║   
+# ██║     ██║██║ ╚████║██████╔╝╚██████╔╝   ██║   
+# ╚═╝     ╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝    ╚═╝   
+# CONFIGURATION FILE v1.0
+# CODEX: This file contains all configurable parameters for the FinBot system.
+# CODEX: Modify these settings to customize the behavior of your financial assistant.
+
+# =====================================================================
+# OLLAMA AI MODEL CONFIGURATION
+# =====================================================================
+ollama:
+  # CODEX: Base URL for Ollama API - change if running on different machine
+  base_url: "http://localhost:11434"
+  # CODEX: Default model to use - llama3.2 recommended for financial analysis
+  model: "llama3.2"
+  # CODEX: System prompt to guide the AI's behavior
+  system_prompt: "You are a financial advisor specializing in both American and Brazilian markets. Provide detailed, accurate investment advice based on the data provided."
+  # CODEX: Temperature controls randomness (0.0-1.0)
+  temperature: 0.7
+  # CODEX: Maximum tokens in response
+  max_tokens: 2048
+
+# =====================================================================
+# DATA SOURCES CONFIGURATION
+# =====================================================================
+data_sources:
+  # CODEX: Update frequency in hours
+  update_frequency: 24
+  # CODEX: Path to store cached market data
+  cache_path: "./data/market_cache"
+  # CODEX: API keys for various data sources (if needed)
+  api_keys:
+    alpha_vantage: ""  # Optional: Add your Alpha Vantage API key if available
+    # Add other API keys as needed
+
+# =====================================================================
+# MARKET CONFIGURATION
+# =====================================================================
+markets:
+  us:
+    # CODEX: Default indices to track for US market
+    indices: ["^GSPC", "^DJI", "^IXIC"]  # S&P 500, Dow Jones, NASDAQ
+    # CODEX: Default currency
+    currency: "USD"
+  brazil:
+    # CODEX: Default indices to track for Brazilian market
+    indices: ["^BVSP"]  # Bovespa
+    # CODEX: Default currency
+    currency: "BRL"
+
+# =====================================================================
+# INVESTMENT PARAMETERS
+# =====================================================================
+investment:
+  # CODEX: Default risk profiles with asset allocation percentages
+  risk_profiles:
+    conservative:
+      stocks: 20
+      bonds: 60
+      cash: 20
+    moderate:
+      stocks: 50
+      bonds: 40
+      cash: 10
+    aggressive:
+      stocks: 80
+      bonds: 15
+      cash: 5
+  
+  # CODEX: Default inflation assumptions (annual %)
+  inflation:
+    us: 2.5
+    brazil: 4.5
+
+# =====================================================================
+# SYSTEM CONFIGURATION
+# =====================================================================
+system:
+  # CODEX: Database configuration
+  database:
+    path: "./data/finbot.db"
+    backup_frequency: 168  # Hours (1 week)
+  
+  # CODEX: Logging configuration
+  logging:
+    level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    file: "./logs/finbot.log"
+    max_size: 10  # MB
+    backup_count: 5
+
+  # CODEX: Output formatting
+  output:
+    color_scheme: "dark"  # Options: dark, light
+    detail_level: "medium"  # Options: basic, medium, detailed
