@@ -199,6 +199,37 @@ def analyze():
                     fig.update_layout(title=f'{symbol} Price History')
                     chart_json = json.dumps(fig, cls=PlotlyJSONEncoder)
                 
+                # Get news related to the symbol
+                news_items = []
+                try:
+                    if hasattr(analysis_engine, 'get_news'):
+                        news_items = analysis_engine.get_news(symbol=symbol, market=market, limit=3)
+                except Exception as e:
+                    logger.warning(f"Error fetching news for {symbol}: {str(e)}")
+                
+                return render_template(
+                    'analyze_result.html',
+                    symbol=symbol,
+                    market=market,
+                    period=period,
+                    result=result,
+                    chart_json=chart_json,
+                    news=news_items,
+                    now=datetime.now
+                )
+            else:
+                return render_template(
+                    'error.html',
+                    error="Analysis engine not initialized"
+                )
+        
+        except Exception as e:
+            logger.error(f"Error processing analysis request: {str(e)}")
+            return render_template('error.html', error=str(e))
+    
+    # GET request - show form
+    return render_template('analyze.html')
+                
                 return render_template(
                     'analyze_result.html',
                     result=result,

@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Financial News</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Stay informed with the latest financial news from trusted sources.
+                </p>
+                <form method="get" action="/news" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="market" class="form-label">Market</label>
+                                <select class="form-select" id="market" name="market">
+                                    <option value="all" {% if market == 'all' %}selected{% endif %}>All Markets</option>
+                                    <option value="US" {% if market == 'US' %}selected{% endif %}>US (NYSE, NASDAQ)</option>
+                                    <option value="BR" {% if market == 'BR' %}selected{% endif %}>Brazil (B3)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="all" {% if category == 'all' %}selected{% endif %}>All Categories</option>
+                                    <option value="markets" {% if category == 'markets' %}selected{% endif %}>Markets</option>
+                                    <option value="stocks" {% if category == 'stocks' %}selected{% endif %}>Stocks</option>
+                                    <option value="economy" {% if category == 'economy' %}selected{% endif %}>Economy</option>
+                                    <option value="business" {% if category == 'business' %}selected{% endif %}>Business</option>
+                                    <option value="crypto" {% if category == 'crypto' %}selected{% endif %}>Cryptocurrency</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="query" class="form-label">Search</label>
+                                <input type="text" class="form-control" id="query" name="query" value="{{ query if query else '' }}" placeholder="Search keywords...">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Filter News</button>
+                    </div>
+                </form>
+                
+                <div class="news-container">
+                    {% if news_items %}
+                        {% for item in news_items %}
+                            <div class="card mb-3 news-item">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">{{ item.title }}</h5>
+                                        <span class="badge {% if item.sentiment == 'positive' %}bg-success{% elif item.sentiment == 'negative' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ item.sentiment|capitalize }}
+                                        </span>
+                                    </div>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ item.source }} | {{ item.date }}</h6>
+                                    <p class="card-text">{{ item.summary }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                        <div>
+                                            {% for tag in item.tags %}
+                                                <span class="badge bg-light text-dark">{{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Sample news for demo -->
+                        <div class="card mb-3 news-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Fed Signals Potential Rate Cuts as Inflation Eases</h5>
+                                    <span class="badge bg-success">Positive</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">Reuters | Today</h6>
+                                <p class="card-text">The Federal Reserve indicated it may begin cutting interest rates in the coming months as inflation shows signs of cooling, boosting market sentiment and driving major indices higher.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                    <div>
+                                        <span class="badge bg-light text-dark">Fed</span>
+                                        <span class="badge bg-light text-dark">Interest Rates</span>
+                                        <span class="badge bg-light text-dark">US Economy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3 news-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Tech Earnings Exceed Expectations, Driving Market Rally</h5>
+                                    <span class="badge bg-success">Positive</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">Bloomberg | Yesterday</h6>
+                                <p class="card-text">Major tech companies reported quarterly earnings that surpassed analyst expectations, with strong growth in cloud services and AI initiatives. The positive results have fueled a broader market rally.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                    <div>
+                                        <span class="badge bg-light text-dark">Tech</span>
+                                        <span class="badge bg-light text-dark">Earnings</span>
+                                        <span class="badge bg-light text-dark">AI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3 news-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Brazil's Central Bank Maintains Interest Rate Amid Economic Uncertainty</h5>
+                                    <span class="badge bg-secondary">Neutral</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">Reuters Brazil | 2 days ago</h6>
+                                <p class="card-text">Brazil's central bank decided to maintain its benchmark interest rate, citing ongoing economic uncertainties and inflation concerns. Analysts expect the rate to remain stable for the next few months.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                    <div>
+                                        <span class="badge bg-light text-dark">Brazil</span>
+                                        <span class="badge bg-light text-dark">Central Bank</span>
+                                        <span class="badge bg-light text-dark">Interest Rates</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3 news-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Oil Prices Fall on Supply Concerns and Weak Demand Outlook</h5>
+                                    <span class="badge bg-danger">Negative</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">CNBC | 3 days ago</h6>
+                                <p class="card-text">Oil prices dropped significantly following reports of increased production from major oil-producing countries and concerns about weakening global demand. Energy stocks have declined in response.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                    <div>
+                                        <span class="badge bg-light text-dark">Oil</span>
+                                        <span class="badge bg-light text-dark">Energy</span>
+                                        <span class="badge bg-light text-dark">Commodities</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3 news-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">Brazilian Retail Sector Shows Signs of Recovery as Consumer Confidence Improves</h5>
+                                    <span class="badge bg-success">Positive</span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">Bloomberg Brazil | 4 days ago</h6>
+                                <p class="card-text">Brazil's retail sector reported better-than-expected sales figures for the past month, indicating a potential recovery as consumer confidence reaches its highest level in two years.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" target="_blank" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+                                    <div>
+                                        <span class="badge bg-light text-dark">Brazil</span>
+                                        <span class="badge bg-light text-dark">Retail</span>
+                                        <span class="badge bg-light text-dark">Consumer</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div>
+                        <button class="btn btn-outline-secondary" {% if not prev_page %}disabled{% endif %}>
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </button>
+                    </div>
+                    <div>
+                        <span class="text-muted">Page {{ current_page if current_page else 1 }} of {{ total_pages if total_pages else 1 }}</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary" {% if not next_page %}disabled{% endif %}>
+                            Next <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">AI News Analysis</h4>
+            </div>
+            <div class="card-body">
+                <div class="terminal">
+                    <p>$ finbot fetch-news --market {{ market if market else 'all' }} --category {{ category if category else 'all' }} {% if query %}--query "{{ query }}"{% endif %}</p>
+                    <p>CODEX: News Sentiment Analysis</p>
+                    <p>Overall market sentiment: <span class="{% if market == 'BR' %}text-warning{% else %}text-success{% endif %}">{{ 'Neutral to Slightly Positive' if market == 'BR' else 'Positive' }}</span></p>
+                    <p>CODEX: Key Themes</p>
+                    <p>1. {{ 'Central bank policies and interest rate expectations' if market != 'BR' else 'Economic recovery amid political uncertainties' }}</p>
+                    <p>2. {{ 'Strong corporate earnings, particularly in tech sector' if market != 'BR' else 'Commodity price fluctuations affecting major exporters' }}</p>
+                    <p>3. {{ 'Inflation concerns showing signs of easing' if market != 'BR' else 'Currency volatility impacting market sentiment' }}</p>
+                    <p>4. {{ 'AI and technological innovation driving growth' if market != 'BR' else 'Retail sector showing mixed performance' }}</p>
+                    
+                    <p>CODEX: Market Implications</p>
+                    <p>The news sentiment suggests a {{ 'favorable' if market != 'BR' else 'cautiously optimistic' }} outlook for {{ market if market and market != 'all' else 'global' }} markets in the near term. {{ 'Strong earnings and potential rate cuts are positive catalysts.' if market != 'BR' else 'Economic indicators show improvement but political factors remain a concern.' }}</p>
+                    
+                    <p>CODEX: Recommendation</p>
+                    <p>Monitor {{ 'Fed communications and tech sector developments' if market != 'BR' else 'central bank decisions and commodity price trends' }} closely as they are likely to drive market direction in the coming weeks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-item {
+        transition: transform 0.2s ease;
+    }
+    
+    .news-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .terminal {
+        background-color: #212529;
+        color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        font-family: 'Courier New', monospace;
+        line-height: 1.5;
+        overflow-x: auto;
+    }
+    
+    .terminal .text-success {
+        color: #26a69a !important;
+    }
+    
+    .terminal .text-warning {
+        color: #ffeb3b !important;
+    }
+    
+    .terminal .text-danger {
+        color: #ef5350 !important;
+    }
+</style>
+{% endblock %}
