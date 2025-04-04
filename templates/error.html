@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Error</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h5 class="alert-heading">An error occurred!</h5>
+                    <p>{{ error }}</p>
+                </div>
+                
+                <div class="terminal">
+                    <p>$ finbot error-report</p>
+                    <p>CODEX: Error Analysis</p>
+                    <p>Error type: {{ error.__class__.__name__ if error.__class__ else 'Unknown' }}</p>
+                    <p>Error message: {{ error }}</p>
+                    <p>CODEX: Troubleshooting</p>
+                    <p>1. Check if all required dependencies are installed</p>
+                    <p>2. Verify API keys and connection settings</p>
+                    <p>3. Ensure data files are accessible and not corrupted</p>
+                    <p>4. Check log files for more detailed information</p>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="/" class="btn btn-secondary me-md-2">Return to Dashboard</a>
+                    <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .terminal {
+        background-color: #212529;
+        color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        font-family: 'Courier New', monospace;
+        line-height: 1.5;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}

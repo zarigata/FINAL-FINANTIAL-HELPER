@@ -229,27 +229,6 @@ def analyze():
     
     # GET request - show form
     return render_template('analyze.html')
-                
-                return render_template(
-                    'analyze_result.html',
-                    result=result,
-                    chart_json=chart_json,
-                    symbol=symbol,
-                    market=market,
-                    period=period
-                )
-            else:
-                return render_template(
-                    'error.html',
-                    error="Analysis engine not initialized"
-                )
-        
-        except Exception as e:
-            logger.error(f"Error processing analysis request: {str(e)}")
-            return render_template('error.html', error=str(e))
-    
-    # GET request - show form
-    return render_template('analyze.html')
 
 @app.route('/trends', methods=['GET', 'POST'])
 def trends():

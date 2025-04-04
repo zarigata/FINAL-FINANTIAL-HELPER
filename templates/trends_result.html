@@ -289,13 +289,13 @@
         
         // Generate sample data based on market
         {% if market == 'US' %}
-            var baseValue = 100;
-            var trend = 0.05;  // Positive trend
-            var volatility = 0.02;
+        var baseValue = 100;
+        var trend = 0.05;  // Positive trend
+        var volatility = 0.02;
         {% else %}
-            var baseValue = 100;
-            var trend = 0.02;  // Slight positive trend
-            var volatility = 0.03;  // Higher volatility
+        var baseValue = 100;
+        var trend = 0.02;  // Slight positive trend
+        var volatility = 0.03;  // Higher volatility
         {% endif %}
         
         // Generate historical data (past 60 days)
